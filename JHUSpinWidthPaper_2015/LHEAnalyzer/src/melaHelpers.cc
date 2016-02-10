@@ -194,7 +194,7 @@ Float_t melaHelpers::melaBranchMEInterpreter(const ZZCandidate* cand, string& br
 
 
   vector<string> gList[2];
-  vector<pair<int, double>> gCoef;
+  vector<pair<int, double> > gCoef;
   if (myProcess!=TVar::bkgZZ && !hasSuperMELA){
     if (myProduction==TVar::ttH || myProduction==TVar::bbH || myProduction==TVar::JH || myProduction==TVar::JJGG || (myProduction==TVar::ZZGG && branchname.find("prod")!=string::npos)){
       gList[0].push_back("g2"); gList[1].push_back("0plus");
