@@ -39,8 +39,8 @@ public:
   Int_t recoSelectionMode(){ return recoSelBehaviour; }
   Int_t recoSmearingMode(){ return recoSmearBehaviour; }
   HiggsComparators::CandidateSelection getHiggsCandidateSelectionScheme(bool isGen=false){ if (isGen) return genHiggsCandidateSelectionScheme; else return recoHiggsCandidateSelectionScheme; }
-  string inputDir(){ return indir; }
-  string outputDir(){ return outdir; }
+  string inputDir(){ return indir+"/"; }
+  string outputDir(){ return outdir+"/"; }
   string getTempDir(){ return tmpDir; }
   string outputFilename(){ return coutput; }
   vector<string> inputfiles(){ return filename; }
