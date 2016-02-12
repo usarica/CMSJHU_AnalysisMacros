@@ -327,6 +327,12 @@ void HVVTree::setupMELASignalMECases(vector<string>& accumulatedlist, TVar::Prod
         gCount[gg][im]++;
         if (noInstance) noInstance=false;
       }
+      else if (prod==TVar::JJGG && chvar=="g2") {
+        if (isProdME && (options->hasGenProdME("g1") && isGen || options->hasRecoProdME("g1") && !isGen)) {
+          gCount[gg][im]++;
+          if (noInstance) noInstance=false;
+        }
+      }
     }
   }
   for (int gg=0; gg<sgList; gg++){
