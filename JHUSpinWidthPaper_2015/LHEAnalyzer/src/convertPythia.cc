@@ -190,7 +190,7 @@ void convertPythia::run(){
 
 TFile* convertPythia::getIntermediateFile(string cinput){
   string coutput = options->getTempDir();
-  string strCmd = "root -b -l -q loadLib.cc 'trimPythia.cc(\"";
+  string strCmd = "root -b -l -q loadLib.cc 'trimPythia.cc+(\"";
   strCmd.append(cinput);
   strCmd.append("\", \"");
   strCmd.append(coutput);
