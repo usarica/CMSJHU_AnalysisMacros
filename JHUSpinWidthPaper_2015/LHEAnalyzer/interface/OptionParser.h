@@ -32,6 +32,7 @@ public:
   Bool_t processRecoInfo(){ bool doProcess=true; if (includeRecoInfo==0) doProcess=false; return doProcess; }
   Bool_t isAnExcludedBranch(string branchname);
   Int_t analysisLevel(){ return fileLevel; }
+  string jetRecoAlgorithm(){ return jetAlgorithm; }
   Int_t doGenHZZdecay(){ return isGenHZZ; }
   Int_t doRecoHZZdecay(){ return isRecoHZZ; }
   Int_t genDecayProducts(){ return genDecayMode; }
@@ -95,6 +96,7 @@ protected:
   HiggsComparators::CandidateSelection genHiggsCandidateSelectionScheme;
   HiggsComparators::CandidateSelection recoHiggsCandidateSelectionScheme;
 
+  string jetAlgorithm;
   string indir;
   string outdir;
   string coutput;

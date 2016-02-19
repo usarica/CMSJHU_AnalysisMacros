@@ -17,7 +17,7 @@ using namespace std;
 
 vector<pair<int, int>> findDuplicates(const vector<double>* fourvector, vector<int> id, vector<int> status);
 
-void trimPythia(TString cinput, TString outdir="./", int fileLevel=1){
+void trimPythia(TString cinput, TString outdir="./", int fileLevel=1, TString jetAlgorithm="ak5"){
   TString coutput = outdir;
   coutput.Append("pythiaTemp.root");
 
@@ -68,8 +68,8 @@ void trimPythia(TString cinput, TString outdir="./", int fileLevel=1){
       cout << "trimPythia should not be called with fileLevel=" << fileLevel << endl;
       assert(0);
     }
-    events->SetBranchStatus("recoGenJets_ak5GenJets__"+suffix+"*", 1);
-    events->SetBranchAddress("recoGenJets_ak5GenJets__"+suffix+".", &jetWrapper);
+    events->SetBranchStatus("recoGenJets_"+jetAlgorithm+"GenJets__"+suffix+"*", 1);
+    events->SetBranchAddress("recoGenJets_"+jetAlgorithm+"GenJets__"+suffix+".", &jetWrapper);
     events->SetBranchStatus("recoGenParticles_genParticles__"+suffix+"*", 1);
     events->SetBranchAddress("recoGenParticles_genParticles__"+suffix+".", &genparticleWrapper);
     events->SetBranchStatus("GenEventInfoProduct_generator__"+suffix+"*", 1);

@@ -196,7 +196,9 @@ TFile* convertPythia::getIntermediateFile(string cinput){
   strCmd.append(coutput);
   strCmd.append("\", ");
   strCmd.append(to_string(options->analysisLevel()));
-  strCmd.append(")'");
+  strCmd.append(", \"");
+  strCmd.append(options->jetRecoAlgorithm());
+  strCmd.append("\")'");
   gSystem->Exec(strCmd.c_str());
   string strtmp=coutput;
   strtmp.append("pythiaTemp.root");

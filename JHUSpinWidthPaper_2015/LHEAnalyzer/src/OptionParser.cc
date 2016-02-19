@@ -14,6 +14,7 @@ computeVBFAngles(0), // VBF production angles
 computeVHAngles(0), // VH production angles
 sampleProductionId(TVar::ZZGG, TVar::JHUGen), // Sample gen. production mode
 fileLevel(0), // -1: ReadMode, 0: LHE, 1: Pythia,
+jetAlgorithm("ak5"),
 isGenHZZ(1), // H->ZZ or H->WW
 isRecoHZZ(1), // H->ZZ or H->WW
 genDecayMode(0), // 4l with HZZ, 2l2nu with HWW, see Event::constructVVCandidates(bool isZZ, int fstype)
@@ -252,6 +253,7 @@ void OptionParser::interpretOption(string wish, string value){
   else if (wish=="includeGenInfo") includeGenInfo = (int)atoi(value.c_str());
   else if (wish=="includeRecoInfo") includeRecoInfo = (int)atoi(value.c_str());
   else if (wish=="fileLevel") fileLevel = (int)atoi(value.c_str());
+  else if (wish=="jetAlgorithm" || wish=="jetalgorithm") jetAlgorithm = value;
   else if (wish=="isGenHZZ"){
     isGenHZZ = (int)atoi(value.c_str());
     if (isGenHZZ==0) PDGHelpers::setHVVmass(PDGHelpers::Wmass);
@@ -301,6 +303,7 @@ void OptionParser::printOptionsHelp(){
   cout << "- No option specifier: Input files with extension .lhe or .root. Multiple input files can be passed as different arguments.\n\n";
   cout << "- indir: Location of input files. Default=\"./\"\n\n";
   cout << "- fileLevel: -1==ReadMode, 0==LHE, 1==Pythia8 (GEN-SIM), 2==Pythia8 (GEN). \".lhe\" extension only allowed for 0, and \".root\" is the only format for the others. Default=0\n\n";
+  cout << "- jetAlgorithm: For fileLevel==1 or 2, which jets in the tree to use.  Default=ak5\n\n";
   cout << "- outfile: Output file name. Default=\"tmp.root\"\n\n";
   cout << "- outdir: Location of the output file. Default=\"./\"\n\n";
   cout << "- tmpDir: Location of temporary files. Default=\"./tmpStore/\"\n\n";
