@@ -7,6 +7,6 @@ int main(int argc, char** argv){
   options.printOptionSummary();
   if (options.analysisLevel()==-1) Reader analyzer(&options);
   else if (options.analysisLevel()==0) convertLHE analyzer(&options);
-  else if (options.analysisLevel()==1) convertPythia analyzer(&options);
+  else if (options.analysisLevel()==1 || options.analysisLevel()==2) convertPythia analyzer(&options);
 }
 
