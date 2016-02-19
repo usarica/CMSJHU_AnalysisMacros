@@ -190,15 +190,23 @@ void convertPythia::run(){
 
 TFile* convertPythia::getIntermediateFile(string cinput){
   string coutput = options->getTempDir();
-  string strCmd = "root -b -l -q loadLib.cc 'trimPythia.cc+(\"";
-  strCmd.append(cinput);
-  strCmd.append("\", \"");
-  strCmd.append(coutput);
-  strCmd.append("\", ");
-  strCmd.append(to_string(options->analysisLevel()));
-  strCmd.append(", \"");
-  strCmd.append(options->jetRecoAlgorithm());
-  strCmd.append("\")'");
+  bool python = true;
+  string strCmd;
+  if (!python)
+  {
+    strCmd = "root -b -l -q loadLib.cc 'trimPythia.cc+(\"";
+    strCmd.append(cinput);
+    strCmd.append("\", \"");
+    strCmd.append(coutput);
+    strCmd.append("\", ");
+    strCmd.append(to_string(options->analysisLevel()));
+    strCmd.append(", \"");
+    strCmd.append(options->jetRecoAlgorithm());
+    strCmd.append("\")'");
+  }
+  else{
+    strCmd = "python trimPythia.py " + cinput + " " + coutput + " " + to_string(options->analysisLevel()) + " " + options->jetRecoAlgorithm();
+  }
   gSystem->Exec(strCmd.c_str());
   string strtmp=coutput;
   strtmp.append("pythiaTemp.root");
