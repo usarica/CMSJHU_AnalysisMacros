@@ -10,6 +10,7 @@
 //CMSSW includes
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
+#include "FWCore/Utilities/interface/TypeWithDict.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
 using namespace std;
