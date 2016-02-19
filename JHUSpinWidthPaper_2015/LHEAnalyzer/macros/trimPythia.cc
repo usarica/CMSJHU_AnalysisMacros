@@ -65,7 +65,7 @@ void trimPythia(TString cinput, TString outdir="./", int pythiaLevel=1, TString 
     if (pythiaLevel == 1) suffix = "SIM";
     else if (pythiaLevel == 0) suffix = "GEN";
     else {
-      cout << "trimPythia should not be called with fileLevel=" << fileLevel << endl;
+      cout << "trimPythia should not be called with pythiaLevel=" << pythiaLevel << endl;
       assert(0);
     }
     events->SetBranchStatus("recoGenJets_"+jetAlgorithm+"GenJets__"+suffix+"*", 1);
