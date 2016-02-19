@@ -106,6 +106,8 @@ $(OUTLIB)main.o: $(INCLUDEDIR)main.cc $(OUTLIB)Reader.o $(OUTLIB)convertPythia.o
 dolinks:
 	ln -sf $(COMPILEPATH)macros/loadLib.cc $(RUNDIR)loadLib.cc
 	ln -sf $(COMPILEPATH)macros/trimPythia.cc $(RUNDIR)trimPythia.cc
+	ln -sf $(COMPILEPATH)macros/loadLib.py $(RUNDIR)loadLib.py
+	ln -sf $(COMPILEPATH)macros/trimPythia.py $(RUNDIR)trimPythia.py
 
 analyzer: $(OUTLIB)main.o
 	$(CXX) $(CXXFLAGS) -o $(RUNDIR)analyzer $(OUTLIB)*.o $(GLIBS)

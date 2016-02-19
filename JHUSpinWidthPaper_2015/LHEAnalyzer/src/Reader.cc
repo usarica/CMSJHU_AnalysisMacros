@@ -33,7 +33,7 @@ template<typename returnType> bool Reader::setVariable(const Event* ev, string& 
 
 void Reader::bindInputBranches(HVVTree* tin){
   vector<string> inputBranches = tin->getBranchList();
-  vector<pair<string, BaseTree::BranchTypes>> unreservedBranches;
+  vector<pair<string, BaseTree::BranchTypes> > unreservedBranches;
   for (int br=0; br<inputBranches.size(); br++){
     int pos=-1;
     string branchname = inputBranches.at(br);

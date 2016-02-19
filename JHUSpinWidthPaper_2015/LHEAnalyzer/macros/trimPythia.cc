@@ -1,16 +1,23 @@
+//std includes
 #include <iostream>
-#include <vector>
 #include <utility>
+#include <vector>
+//root includes
 #include "TFile.h"
-#include "TTree.h"
-#include "TString.h"
 #include "TLorentzVector.h"
+#include "TString.h"
+#include "TTree.h"
+//CMSSW includes
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
+#include "FWCore/Utilities/interface/TypeWithDict.h"
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
 using namespace std;
 
 vector<pair<int, int>> findDuplicates(const vector<double>* fourvector, vector<int> id, vector<int> status);
 
-void trimPythia(TString cinput, TString outdir="./"){
+void trimPythia(TString cinput, TString outdir="./", int pythiaLevel=1, TString jetAlgorithm="ak5"){
   TString coutput = outdir;
   coutput.Append("pythiaTemp.root");
 
@@ -54,12 +61,19 @@ void trimPythia(TString cinput, TString outdir="./"){
     edm::Wrapper< vector<reco::GenParticle> >* genparticleWrapper;
     edm::Wrapper< GenEventInfoProduct >* geneventinfoWrapper;
 
-    events->SetBranchStatus("recoGenJets_ak5GenJets__SIM*", 1);
-    events->SetBranchAddress("recoGenJets_ak5GenJets__SIM.", &jetWrapper);
-    events->SetBranchStatus("recoGenParticles_genParticles__SIM*", 1);
-    events->SetBranchAddress("recoGenParticles_genParticles__SIM.", &genparticleWrapper);
-    events->SetBranchStatus("GenEventInfoProduct_generator__SIM*", 1);
-    events->SetBranchAddress("GenEventInfoProduct_generator__SIM.", &geneventinfoWrapper);
+    TString suffix;
+    if (pythiaLevel == 1) suffix = "SIM";
+    else if (pythiaLevel == 0) suffix = "GEN";
+    else {
+      cout << "trimPythia should not be called with pythiaLevel=" << pythiaLevel << endl;
+      assert(0);
+    }
+    events->SetBranchStatus("recoGenJets_"+jetAlgorithm+"GenJets__"+suffix+"*", 1);
+    events->SetBranchAddress("recoGenJets_"+jetAlgorithm+"GenJets__"+suffix+".", &jetWrapper);
+    events->SetBranchStatus("recoGenParticles_genParticles__"+suffix+"*", 1);
+    events->SetBranchAddress("recoGenParticles_genParticles__"+suffix+".", &genparticleWrapper);
+    events->SetBranchStatus("GenEventInfoProduct_generator__"+suffix+"*", 1);
+    events->SetBranchAddress("GenEventInfoProduct_generator__"+suffix+".", &geneventinfoWrapper);
 
     for (int ev=0; ev<events->GetEntries(); ev++){
       events->GetEntry(ev);
@@ -75,15 +89,15 @@ void trimPythia(TString cinput, TString outdir="./"){
       reco_GenJet_status.clear();
       reco_GenParticle_status.clear();
 
-      gen::PdfInfo* genpdf = geneventinfoWrapper->product()->pdf();
+      const gen::PdfInfo* genpdf = geneventinfoWrapper->product()->pdf();
       const vector<double> genweights = geneventinfoWrapper->product()->weights();
-      for (int g=0; g<genweights.size(); g++) geneventinfoweights.push_back(genweights.at(g));
+      for (unsigned int g=0; g<genweights.size(); g++) geneventinfoweights.push_back(genweights.at(g));
 
       const vector<reco::GenJet>* reco_GenJets = jetWrapper->product();
       const vector<reco::GenParticle>* reco_GenParticles = genparticleWrapper->product();
 
-      for (int p=0; p<reco_GenParticles->size(); p++){
-        reco::GenParticle& part = reco_GenParticles->at(p);
+      for (unsigned int p=0; p<reco_GenParticles->size(); p++){
+        const reco::GenParticle& part = reco_GenParticles->at(p);
         if (
           ((part.pdgId()==25 || part.pdgId()==32) && part.status()==22) // Generated Higgs
           ||
@@ -103,13 +117,13 @@ void trimPythia(TString cinput, TString outdir="./"){
       vector<pair<int, int>> reco_GenParticle_duplicates = findDuplicates(reco_GenParticle_FV, reco_GenParticle_id, reco_GenParticle_status);
 
       // Add status==1 or status==23 (with precedence for status==1) leptons to genJet collection
-      for (int p=0; p<reco_GenParticle_id.size(); p++){
+      for (unsigned int p=0; p<reco_GenParticle_id.size(); p++){
         if ((std::abs(reco_GenParticle_id.at(p))>=11 && std::abs(reco_GenParticle_id.at(p))<=16) && std::abs(reco_GenParticle_id.at(p)) % 2 == 1){
           bool match=false;
-          for (int dd=0; dd<reco_GenParticle_duplicates.size(); dd++){
+          for (unsigned int dd=0; dd<reco_GenParticle_duplicates.size(); dd++){
             pair<int, int> duplicate = reco_GenParticle_duplicates.at(dd);
             int iOriginal = duplicate.first; // Status==23 particle
-            if (iOriginal==p){ match=true; break; }
+            if (iOriginal==int(p)){ match=true; break; }
           }
           if (match) continue;
           for(int fv=0;fv<4;fv++) reco_GenJet_FV[fv].push_back(reco_GenParticle_FV[fv].at(p));
@@ -119,11 +133,11 @@ void trimPythia(TString cinput, TString outdir="./"){
       }
 
       vector<int> removalArray;
-      for (int dd=0; dd<reco_GenParticle_duplicates.size(); dd++){
+      for (unsigned int dd=0; dd<reco_GenParticle_duplicates.size(); dd++){
         pair<int, int> duplicate = reco_GenParticle_duplicates.at(dd);
         int iTransfer = duplicate.second; // Status==1 particle
         bool inserted=false;
-        for (int it = 0; it<removalArray.size(); it++){
+        for (unsigned int it = 0; it<removalArray.size(); it++){
           int iIndex = removalArray.at(it);
           if (iTransfer > iIndex){
             removalArray.insert(removalArray.begin()+it, iTransfer);
@@ -134,7 +148,7 @@ void trimPythia(TString cinput, TString outdir="./"){
         if (!inserted) removalArray.push_back(iTransfer);
       }
       // Remove status==1 duplicates from genParticles
-      for (int dd=0; dd<removalArray.size(); dd++){
+      for (unsigned int dd=0; dd<removalArray.size(); dd++){
         int iTransfer = removalArray.at(dd);
         for (int fv=0; fv<4; fv++){
           reco_GenParticle_FV[fv].erase(reco_GenParticle_FV[fv].begin()+iTransfer);
@@ -143,8 +157,8 @@ void trimPythia(TString cinput, TString outdir="./"){
         reco_GenParticle_status.erase(reco_GenParticle_status.begin()+iTransfer);
       }
 
-      for (int p=0; p<reco_GenJets->size(); p++){
-        reco::GenJet& jet = reco_GenJets->at(p);
+      for (unsigned int p=0; p<reco_GenJets->size(); p++){
+        const reco::GenJet& jet = reco_GenJets->at(p);
         reco_GenJet_FV[0].push_back(jet.px());
         reco_GenJet_FV[1].push_back(jet.py());
         reco_GenJet_FV[2].push_back(jet.pz());
@@ -166,12 +180,12 @@ void trimPythia(TString cinput, TString outdir="./"){
 vector<pair<int, int>> findDuplicates(const vector<double>* fourvector, vector<int> id, vector<int> status){
   vector<pair<int, int>> duplicates;
 
-  for (int xx=0; xx<id.size(); xx++){
+  for (unsigned int xx=0; xx<id.size(); xx++){
     TLorentzVector p_tm(fourvector[0].at(xx), fourvector[1].at(xx), fourvector[2].at(xx), fourvector[3].at(xx));
     int id_tm = id.at(xx);
     int st_tm = status.at(xx);
     if (st_tm==23 || st_tm==1){
-      for (int yy=xx+1; yy<id.size(); yy++){
+      for (unsigned int yy=xx+1; yy<id.size(); yy++){
         TLorentzVector p_tbm(fourvector[0].at(yy), fourvector[1].at(yy), fourvector[2].at(yy), fourvector[3].at(yy));
         int id_tbm = id.at(yy);
         int st_tbm = status.at(yy);

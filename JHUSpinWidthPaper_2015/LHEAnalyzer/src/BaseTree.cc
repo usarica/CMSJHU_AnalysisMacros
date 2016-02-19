@@ -100,25 +100,25 @@ BaseTree::BranchTypes BaseTree::searchArray(string branchname, int& position){
   for (int el=0; el<intBranches.size(); el++){
     if (branchname==intBranches.at(el).first){
       position = el;
-      return BranchTypes::bInt;
+      return bInt;
     }
   }
   for (int el=0; el<floatBranches.size(); el++){
     if (branchname==floatBranches.at(el).first){
       position = el;
-      return BranchTypes::bFloat;
+      return bFloat;
     }
   }
   for (int el=0; el<vectorIntBranches.size(); el++){
     if (branchname==vectorIntBranches.at(el).first){
       position = el;
-      return BranchTypes::bVectorInt;
+      return bVectorInt;
     }
   }
   for (int el=0; el<vectorDoubleBranches.size(); el++){
     if (branchname==vectorDoubleBranches.at(el).first){
       position = el;
-      return BranchTypes::bVectorDouble;
+      return bVectorDouble;
     }
   }
   return BaseTree::nBranchTypes;

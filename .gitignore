@@ -1,6 +1,7 @@
 *.o
 *.so
 *.d
+*_ACLiC_dict_rdict.pcm
 *.lhe
 *.log
 log*.txt

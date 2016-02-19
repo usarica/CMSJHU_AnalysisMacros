@@ -32,6 +32,8 @@ public:
   Bool_t processRecoInfo(){ bool doProcess=true; if (includeRecoInfo==0) doProcess=false; return doProcess; }
   Bool_t isAnExcludedBranch(string branchname);
   Int_t analysisLevel(){ return fileLevel; }
+  Int_t pythiaType(){ return pythiaLevel; }
+  string jetRecoAlgorithm(){ return jetAlgorithm; }
   Int_t doGenHZZdecay(){ return isGenHZZ; }
   Int_t doRecoHZZdecay(){ return isRecoHZZ; }
   Int_t genDecayProducts(){ return genDecayMode; }
@@ -39,8 +41,8 @@ public:
   Int_t recoSelectionMode(){ return recoSelBehaviour; }
   Int_t recoSmearingMode(){ return recoSmearBehaviour; }
   HiggsComparators::CandidateSelection getHiggsCandidateSelectionScheme(bool isGen=false){ if (isGen) return genHiggsCandidateSelectionScheme; else return recoHiggsCandidateSelectionScheme; }
-  string inputDir(){ return indir; }
-  string outputDir(){ return outdir; }
+  string inputDir(){ return indir+"/"; }
+  string outputDir(){ return outdir+"/"; }
   string getTempDir(){ return tmpDir; }
   string outputFilename(){ return coutput; }
   vector<string> inputfiles(){ return filename; }
@@ -86,6 +88,7 @@ protected:
   Int_t computeVBFAngles;
   Int_t computeVHAngles;
   Int_t fileLevel;
+  Int_t pythiaLevel;
   Int_t isGenHZZ;
   Int_t isRecoHZZ;
   Int_t genDecayMode;
@@ -95,6 +98,7 @@ protected:
   HiggsComparators::CandidateSelection genHiggsCandidateSelectionScheme;
   HiggsComparators::CandidateSelection recoHiggsCandidateSelectionScheme;
 
+  string jetAlgorithm;
   string indir;
   string outdir;
   string coutput;
