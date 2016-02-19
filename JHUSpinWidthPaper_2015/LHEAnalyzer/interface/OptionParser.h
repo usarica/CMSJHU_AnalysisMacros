@@ -32,6 +32,7 @@ public:
   Bool_t processRecoInfo(){ bool doProcess=true; if (includeRecoInfo==0) doProcess=false; return doProcess; }
   Bool_t isAnExcludedBranch(string branchname);
   Int_t analysisLevel(){ return fileLevel; }
+  Int_t pythiaType(){ return pythiaLevel; }
   string jetRecoAlgorithm(){ return jetAlgorithm; }
   Int_t doGenHZZdecay(){ return isGenHZZ; }
   Int_t doRecoHZZdecay(){ return isRecoHZZ; }
@@ -87,6 +88,7 @@ protected:
   Int_t computeVBFAngles;
   Int_t computeVHAngles;
   Int_t fileLevel;
+  Int_t pythiaLevel;
   Int_t isGenHZZ;
   Int_t isRecoHZZ;
   Int_t genDecayMode;

@@ -3,8 +3,8 @@ import os
 import ROOT
 import sys
 
-def trimPythia(cinput, outdir="./", fileLevel=1, jetAlgorithm="ak5"):
-  fileLevel = int(fileLevel)
+def trimPythia(cinput, outdir="./", pythiaLevel=1, jetAlgorithm="ak5"):
+  pythiaLevel = int(pythiaLevel)
   coutput = os.path.join(outdir, "pythiaTemp.root")
 
   ftemp = ROOT.TFile(coutput, "recreate")
@@ -43,17 +43,14 @@ def trimPythia(cinput, outdir="./", fileLevel=1, jetAlgorithm="ak5"):
     events = f.Get("Events")
     events.SetBranchStatus("*", 0)
 
-    if fileLevel == 1: suffix = "SIM"
-    elif fileLevel == 2: suffix = "GEN"
+    if pythiaLevel == 1: suffix = "SIM"
+    elif pythiaLevel == 0: suffix = "GEN"
     else:
-      print "trimPythia should not be called with fileLevel=%i" % fileLevel
+      print "trimPythia should not be called with pythiaLevel=%i" % pythiaLevel
       assert False
     events.SetBranchStatus("recoGenJets_"+jetAlgorithm+"GenJets__"+suffix+"*", 1)
-    #events.SetBranchAddress("recoGenJets_"+jetAlgorithm+"GenJets__"+suffix+".obj", &reco_GenJets)
     events.SetBranchStatus("recoGenParticles_genParticles__"+suffix+"*", 1)
-    #events.SetBranchAddress("recoGenParticles_genParticles__"+suffix+".obj", &reco_GenParticles)
     events.SetBranchStatus("GenEventInfoProduct_generator__"+suffix+"*", 1)
-    #events.SetBranchAddress("GenEventInfoProduct_generator__"+suffix+".", &geneventinfoWrapper)
 
     for ev in events:
       geneventinfoweights.clear()

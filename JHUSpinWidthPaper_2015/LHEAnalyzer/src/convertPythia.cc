@@ -199,7 +199,7 @@ TFile* convertPythia::getIntermediateFile(string cinput){
     strCmd.append("\", \"");
     strCmd.append(coutput);
     strCmd.append("\", ");
-    strCmd.append(to_string(options->analysisLevel()));
+    strCmd.append(to_string(options->pythiaType()));
     strCmd.append(", \"");
     strCmd.append(options->jetRecoAlgorithm());
     strCmd.append("\")'");
