@@ -205,7 +205,7 @@ TFile* convertPythia::getIntermediateFile(string cinput){
     strCmd.append("\")'");
   }
   else{
-    strCmd = "python trimPythia.py " + cinput + " " + coutput + " " + to_string(options->analysisLevel()) + " " + options->jetRecoAlgorithm();
+    strCmd = "python trimPythia.py " + cinput + " " + coutput + " " + to_string(options->pythiaType()) + " " + options->jetRecoAlgorithm();
   }
   gSystem->Exec(strCmd.c_str());
   string strtmp=coutput;
