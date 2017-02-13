@@ -18,9 +18,8 @@ void Event::applyLeptonSelection(){
     if (std::abs((*it)->id)==11 && ((*it)->pt()<=electronPTCut || std::abs((*it)->eta())>=electronEtaAcceptanceCut)) passAcceptance = false;
     else if (std::abs((*it)->id)==13 && ((*it)->pt()<=muonPTCut || std::abs((*it)->eta())>=muonEtaAcceptanceCut)) passAcceptance = false;
     else if (std::abs((*it)->id)==15) passAcceptance = false;
-    for (std::vector<Particle*>::iterator it2 = leptons.begin(); it2<leptons.end(); it2++){
-      if ((*it2)==(*it)) continue; // Every particle is their own ghost.
-      else if ((*it)->deltaR((*it2)->p4)<=ghostDeltaRCut) passAcceptance = false; // Ghost removal
+    for (std::vector<Particle*>::iterator it2 = it+1; it2<leptons.end(); it2++){
+      if ((*it)->deltaR((*it2)->p4)<=ghostDeltaRCut) passAcceptance = false; // Ghost removal
     }
     (*it)->setSelected(passAcceptance);
   }
